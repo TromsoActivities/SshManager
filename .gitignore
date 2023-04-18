@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+#Custom
+worker-config.yml
+manager-config.yml
+!default_config/*config.yml

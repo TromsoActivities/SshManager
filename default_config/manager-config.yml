@@ -1,0 +1,5 @@
+sockets:
+  discord:
+    port: 25564
+  worker:
+    port: 25563

@@ -1,0 +1,4 @@
+sockets:
+  manager:
+    port: 25563
+    ip: ssh-manager

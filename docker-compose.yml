@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  ssh-manager:
+    image: registry.ultraxime.fr/ssh-manager
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        type: manager
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - "node.labels.ssh-manager==True"
+    stdin_open: true
+    tty: true
+    volumes:
+      - type: bind
+        source: manager-config.yml
+        target: /config
+      - type: bind
+        source: ~/.ssh/authorized_key
+        target: /authorized_key
+    networks:
+      - administration
+
+
+  ssh-worker:
+    image: registry.ultraxime.fr/ssh-worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        type: worker
+    restart: always
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    stdin_open: true
+    tty: true
+    volumes:
+      - type: bind
+        source: worker-config.yml
+        target: /config
+      - type: bind
+        source: ~/.ssh/authorized_key
+        target: /authorized_key
+    networks:
+      - administration
+
+networks:
+  administration:
+    name: administration
+    external: true
